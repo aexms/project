@@ -27,6 +27,7 @@ os.system("ffmpeg -i " + argv[1] + ".mp4 -vf scale=320:240 " + argv[1] + "1.mp4"
 # Extracting frames from video to workdir
 n = os.system("ffmpeg -i " + argv[1] + '1.mp4 ' + workdir + '/frame%d.png')
 
+# Clustering
 def backgr(frms):
     shape = (len(frms), len(frms[0]), len(frms[0][0]))
     image = []
