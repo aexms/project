@@ -18,11 +18,13 @@ from skimage import filters
 from sys import argv
 from sklearn.cluster import DBSCAN
 
-
+# Creating working directory
 if (not os.path.exists(workdir)):
     workdir = './frames_' + os.path.splitext(os.path.basename(argv[1]))[0]
 os.mkdir(workdir)
+# Resizing input video
 os.system("ffmpeg -i " + argv[1] + ".mp4 -vf scale=320:240 " + argv[1] + "1.mp4")
+# Extracting frames from video to workdir
 n = os.system("ffmpeg -i " + argv[1] + '1.mp4 ' + workdir + '/frame%d.png')
 
 def backgr(frms):
@@ -48,7 +50,7 @@ def backgr(frms):
                 row.append(np.mean(pixels, axis=0))
         image.append(row)
     return image
-
+# Creating array of frames
 frames = np.array([np.asarray(Image.open(os.path.join(workdir, 'frame' + str(f + 1) + '.png')))
                    for f in range(len(os.listdir(workdir)))])
 
@@ -57,6 +59,7 @@ image1 = imread(path + "1.png")
 k = 0
 prev = 0
 res = []
+# Scene change detection
 for i in range(2, 1200):
     image2 = imread(path + str(i) + ".png")
     img1 = rgb2gray(image1)
@@ -76,9 +79,10 @@ print(k)
 ans = backgr(frames[prev:min(i-1, prev + 100)])
 ans = np.array(ans).astype(np.uint8)
 res.append(ans)
-
 res = np.array(res).astype(np.uint8)
 print(res.shape)
+
+# Saving scenes to outdir
 outdir = './loc_' + os.path.splitext(os.path.basename(argv[1]))[0]
 if (not os.path.exists(outdir)):
     os.mkdir(outdir)
@@ -114,7 +118,7 @@ def extract_hog(img):
             vect /= ((sum(vect ** 2) + finfo(float).eps) ** 0.5)
             descr = hstack((descr, vect))
     return descr
-
+# Removing temporary files
 for f in os.listdir(workdir):
     os.remove(os.path.join(workdir, f))
 os.rmdir(workdir)
