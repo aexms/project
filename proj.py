@@ -90,6 +90,7 @@ if (not os.path.exists(outdir)):
 for i in range(res.shape[0]):
     imsave(outdir +'/loc' + str(i + 1) + '.png', res[i])
 
+# Histogram of oriented gradients
 def extract_hog(img):
     img = resize(rgb2gray(img), (64, 64))
     ker_h = array([[-1, 0, 1],
