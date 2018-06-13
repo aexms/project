@@ -60,7 +60,7 @@ image1 = imread(path + "1.png")
 k = 0
 prev = 0
 res = []
-# Scene change detection
+# Scene change detection by frame comparision
 for i in range(2, len(os.listdir(workdir))):
     image2 = imread(path + str(i) + ".png")
     img1 = rgb2gray(image1)
