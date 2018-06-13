@@ -60,7 +60,7 @@ k = 0
 prev = 0
 res = []
 # Scene change detection
-for i in range(2, 1200):
+for i in range(2, len(os.listdir(workdir))):
     image2 = imread(path + str(i) + ".png")
     img1 = rgb2gray(image1)
     img2 = rgb2gray(image2)
