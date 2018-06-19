@@ -56,8 +56,6 @@ def backgr(frms):
             else:
                 row.append(np.mean(pixels, axis=0))
         image.append(row)
-        if i % 10 == 9:
-            print(i + 1)
     return image
 
 
