@@ -48,8 +48,6 @@ def backgr(frms):
             db = DBSCAN(eps=4, min_samples=4).fit(pixels)
             labels = db.labels_
             label_set = set(labels)
-            # if len(label_set) > 2:
-            #    print(len(label_set), i, j)
             lbcnt = {k: 0 for k in label_set}
             for k in labels:
                 lbcnt[k] += 1
@@ -64,6 +62,8 @@ def backgr(frms):
             else:
                 row.append(np.mean(pixels, axis=0))
         image.append(row)
+        if i % 100 == 99:
+            print(i + 1)
 
     return image
 
@@ -107,26 +107,20 @@ cpy = np.copy(res[0])
 term = np.array(term)
 
 frames = np.array(frames).astype(np.uint8)
-# print(term.shape, term[0], term[1], len(os.listdir(workdir)))
-# print(term)
-# print(res.shape)
 
 # Searching for the same locations
 loc = np.arange(res.shape[0])
 for i in range(loc.shape[0]):
     if i == 0 or loc[i] == i:
-        # print(i)
         if i != 0 and loc[i] == i:
             loc[i] = loc[i-1] + 1
         img1 = rgb2gray(res[i])
         for j in range(i + 1, loc.shape[0]):
             img2 = rgb2gray(res[j])
-            # print(i, j, sum((img1 - img2) ** 2))
             if sum((img1 - img2) ** 2) < 5000:
                 loc[j] = loc[i]
-# print(loc)
 
-outdir = './loc1_' + os.path.splitext(os.path.basename(argv[1]))[0]
+outdir = './loc_' + os.path.splitext(os.path.basename(argv[1]))[0]
 if not os.path.exists(outdir):
     os.mkdir(outdir)
 
@@ -148,7 +142,6 @@ if len(argv) < 3:
 else:
     outpath = argv[2]
 os.system("ffmpeg -r 30 -i " + outdir + "/loc%d.png -vcodec mpeg4 -y " + outpath)
-# os.system("ffmpeg -r 30 -i E:/frames_inpt5/frame%d.png -vcodec mpeg4 -y E:/inpt5.mp4")
 
 # Deleting files
 os.remove("./sm_" + os.path.splitext(os.path.basename(argv[1]))[0] + os.path.splitext(os.path.basename(argv[1]))[1])
